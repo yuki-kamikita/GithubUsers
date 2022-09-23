@@ -21,4 +21,13 @@ class ApiRequest {
         Logger.debug("$response")
         return if (response.isSuccessful) response.body() else null
     }
+
+    /**
+     * @return 取得失敗したらnullを返す TODO: ここのエラーの処理ちゃんとする
+     */
+    suspend fun getUser(login: String): User? {
+        val response = service.user(login)
+        Logger.debug("$response")
+        return if (response.isSuccessful) response.body() else null
+    }
 }

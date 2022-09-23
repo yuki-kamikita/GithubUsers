@@ -1,6 +1,7 @@
 package com.example.githubusers.ui.page
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,32 +22,35 @@ import com.example.githubusers.core.data.User
 import com.example.githubusers.ui.theme.GithubUsersTheme
 
 @Composable
-fun UserList(userList: List<User>) {
-    // A surface container using the 'background' color from the theme
+fun UserListUI(
+    userList: List<User>,
+    onCardClick: (String) -> Unit = {},
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface
     ) {
-        UserCardList(userList)
+        UserCardList(userList, onCardClick)
     }
 
 }
 
 @Composable
-fun UserCardList(users: List<User>) {
+fun UserCardList(users: List<User>, onCardClick: (String) -> Unit = {}) {
     LazyColumn {
         items(users) { user ->
-            UserCard(user)
+            UserCard(user, onCardClick)
         }
     }
 }
 
 @Composable
-fun UserCard(user: User) {
+fun UserCard(user: User, onClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .padding(all = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { onClick(user.login) },
 //        elevation = CardDefaults.cardElevation()
     ) {
         Row(modifier = Modifier.padding(all = 8.dp)) {
