@@ -76,4 +76,7 @@ dependencies {
 
     // URLから画像を取得
     implementation("io.coil-kt:coil-compose:2.2.1")
+
+    // gson jsonシリアライズ
+    implementation 'com.google.code.gson:gson:2.8.9'
 }

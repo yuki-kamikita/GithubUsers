@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.githubusers.core.data.User
+import com.example.githubusers.core.dummy.sampleUser
 import com.example.githubusers.ui.theme.GithubUsersTheme
 
 @Composable
@@ -28,7 +29,6 @@ fun UserListUI(
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.surface
     ) {
         UserCardList(userList, onCardClick)
     }
@@ -85,27 +85,6 @@ fun UserCard(user: User, onClick: (String) -> Unit) {
 )
 @Composable
 fun ListPreview() {
-    val sampleUser = User(
-        login = "octocat",
-        id = 1,
-        nodeId = "MDQ6VXNlcjE=",
-        avatarUrl = "https://github.com/images/error/octocat_happy.gif",
-        gravatarId = "",
-        url = "https://api.github.com/users/octocat",
-        htmlUrl = "https://github.com/octocat",
-        followersUrl = "https://api.github.com/users/octocat/followers",
-        followingUrl = "https://api.github.com/users/octocat/following{/otherUser}",
-        gistsUrl = "https://api.github.com/users/octocat/gists{/gist_id}",
-        starredUrl = "https://api.github.com/users/octocat/starred{/owner}{/repo}",
-        subscriptionsUrl = "https://api.github.com/users/octocat/subscriptions",
-        organizationsUrl = "https://api.github.com/users/octocat/orgs",
-        reposUrl = "https://api.github.com/users/octocat/repos",
-        eventsUrl = "https://api.github.com/users/octocat/events{/privacy}",
-        receivedEventsUrl = "https://api.github.com/users/octocat/received_events",
-        type = "User",
-        siteAdmin = false,
-        bio = "ここに自己紹介がつらつらと書かれてそれを参考にユーザーの詳細を見に行くかどうか判断する想定"
-    )
     GithubUsersTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
