@@ -79,4 +79,7 @@ dependencies {
 
     // gson jsonシリアライズ
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    // マテリアルデザインのアイコン
+    implementation 'androidx.compose.material:material-icons-extended:1.2.1'
 }
