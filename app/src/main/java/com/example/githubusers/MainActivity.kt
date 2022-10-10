@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val userList = ApiRequest().getAllUsers()!!
-//            val userList = ApiRequest().getAllUsersDummy()
+//            val userList = ApiRequest().getAllUsersDummy() // 開発用のダミーデータ
 
             CoroutineScope(Dispatchers.Main).launch {
                 setContent {
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                                 val login = user.arguments?.getString(UserDetail.loginArg)!!
                                 var userDetail by remember { mutableStateOf(User()) }
                                 LaunchedEffect(userDetail) {
-                                    userDetail = ApiRequest().getUser(login)!! // TODO
+                                    userDetail = ApiRequest().getUser(login)!!
 //                                    userDetail = ApiRequest().getUserDummy()
                                 }
                                 UserDetailUI(userDetail)

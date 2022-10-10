@@ -1,23 +1,22 @@
 package com.example.githubusers.ui.page
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,18 +30,30 @@ import com.example.githubusers.core.data.User
 import com.example.githubusers.core.dummy.sampleUser
 import com.example.githubusers.ui.theme.GithubUsersTheme
 import com.example.githubusers.R
+import com.example.githubusers.core.data.Licence
+import com.example.githubusers.core.data.Repository
+import com.example.githubusers.ui.component.CenterProgressIndicator
+import com.example.githubusers.viewModel.UserDetailViewModel
+import com.google.gson.annotations.SerializedName
 
+/**
+ * ユーザー詳細画面
+ *
+ * レポジトリをクリックしたらブラウザで該当レポジトリを表示
+ */
 @Composable
-fun UserDetailUI(user: User) {
+fun UserDetailUI(user: User, viewModel: UserDetailViewModel = UserDetailViewModel(user)) {
+    val repositories by viewModel.repositories
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
     ) {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
-        ) {
-            UserProfile(user = user)
-            UserRepository(user = user)
+        LazyColumn{
+            item { UserProfile(user = user) }
+            if (repositories != null) items(repositories!!.items!!) { repository ->
+                RepositoryCard(repository = repository)
+            }
+            else item { CenterProgressIndicator() }
         }
     }
 }
@@ -71,7 +82,7 @@ fun UserProfile(user: User) {
                     .clip(RoundedCornerShape(8.dp))
             )
             Text(
-                text = user.name,
+                text = user.name ?: user.login,
                 style = typography.displayMedium
             )
             if (user.bio != null) Text(
@@ -102,13 +113,7 @@ fun TwitterLinkIcon(twitterUsername: String) {
             .clickable(
                 enabled = true,
                 onClickLabel = "Twitter",
-                onClick = {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://twitter.com/${twitterUsername}")
-                    )
-                    context.startActivity(intent)
-                }
+                onClick = { toBrowser(context, "https://twitter.com/${twitterUsername}") }
             )
     )
 }
@@ -148,24 +153,66 @@ fun BlogLinkIcon(blog: String) {
             .clickable(
                 enabled = true,
                 onClickLabel = "Url",
-                onClick = {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(blog)
-                    )
-                    context.startActivity(intent)
-                }
+                onClick = { toBrowser(context, blog) }
             )
     )
 }
 
-
 @Composable
-fun UserRepository(user: User) {
-    Text(
-        text = "ここにレポジトリ情報を書く\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nスクロール確認用",
-        style = typography.bodyMedium
+fun RepositoryCard(repository: Repository) {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier
+            .padding(all = 8.dp)
+            .fillMaxWidth()
+            .clickable { toBrowser(context, repository.htmlUrl) },
+        ) {
+        Row(modifier = Modifier.padding(all = 8.dp)) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(repository.owner.avatarUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Contact profile picture",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+            )
+            Column (
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .fillMaxWidth()
+            ){
+                Row{
+                    Text(
+                        text = repository.name,
+                        style = typography.titleMedium
+                    )
+                    if (repository.language != null) Text(text = " / ${repository.language}")
+                }
+                if (repository.description != null) Text(
+                    text = repository.description,
+                    style = typography.bodyMedium
+                )
+                Text(
+                    text = "update at: ${repository.updatedAt}",
+                    style = typography.bodySmall,
+                )
+        }
+
+        }
+    }
+}
+
+/**
+ * URLを指定してブラウザ遷移する
+ */
+fun toBrowser(context: Context, url: String) {
+    val intent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse(url)
     )
+    context.startActivity(intent)
 }
 
 
@@ -189,8 +236,44 @@ fun Preview() {
     }
 }
 
-//private fun startActivity(url: String) {
-//    val uri = Uri.parse(url)
-//    val intent = Intent(ACTION_VIEW,uri)
-//    startActivity(intent)
-//}
+@Preview(
+    showBackground = true,
+    name = "Repository Card Light"
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    name = "Repository Card Dark"
+)
+@Composable
+fun RepositoryCardPreview() {
+    GithubUsersTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            RepositoryCard(Repository(
+                id = 1,
+                name = "SampleRepository",
+                owner = sampleUser,
+                htmlUrl = "https://github.com/",
+                description = "レポジトリの説明",
+                createdAt = "",
+                updatedAt = "2013-01-05T17:58:47Z",
+                pushedAt = "",
+                stargazersCount = 1,
+                watchersCount = 1,
+                language = "Kotlin",
+                forksCount = 1,
+                visibility = "public",
+                licence = Licence(
+                    key = "mit",
+                    name = "MIT License",
+                    url = "https://api.github.com/licenses/mit",
+                    spdxId = "MIT",
+                    nodeId = "MDc6TGljZW5zZW1pdA==",
+                    htmlUrl = "https://api.github.com/licenses/mit"
+                )
+            ))
+        }
+    }
+}

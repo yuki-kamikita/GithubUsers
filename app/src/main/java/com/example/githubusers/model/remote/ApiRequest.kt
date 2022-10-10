@@ -19,7 +19,7 @@ class ApiRequest {
     private val service = retrofit.create(Endpoint::class.java)
 
     /**
-     * @return 取得失敗したらnullを返す TODO: ここのエラーの処理ちゃんとする
+     * @return 取得失敗したらnullを返す
      */
     suspend fun getAllUsers(): List<User>? {
         val response = service.getAllUsers()
@@ -32,7 +32,7 @@ class ApiRequest {
     }
 
     /**
-     * @return 取得失敗したらnullを返す TODO: ここのエラーの処理ちゃんとする
+     * @return 取得失敗したらnullを返す
      */
     suspend fun getUser(login: String): User? {
         val response = service.getUser(login)
@@ -47,16 +47,12 @@ class ApiRequest {
     /**
      * 指定したユーザーの全レポジトリを取得する
      *
-     * @return 取得失敗したらnullを返す TODO: ここのエラーの処理ちゃんとする
+     * @return 取得失敗したらnullを返す
      */
     suspend fun getUserRepositories(userName: String): Repositories? {
         val response = service.searchRepositories("user${':'}$userName")
         Logger.debug("$response")
         Logger.debug("${response.body()}")
-//        val repositories: Repositories? = response.body()
-//        Logger.debug("$repositories")
-//
-//        return if (response.isSuccessful) repositories else null
         return if (response.isSuccessful) response.body() else null
     }
 }

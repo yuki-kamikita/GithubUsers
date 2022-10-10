@@ -21,10 +21,12 @@ data class Repository(
     val id: Int,
     @SerializedName("name")
     val name: String,
+    @SerializedName("owner")
+    val owner: User,
     @SerializedName("html_url")
     val htmlUrl: String,
     @SerializedName("description")
-    val description: String,
+    val description: String?,
     @SerializedName("created_at")
     val createdAt: String,
     @SerializedName("updated_at")
@@ -36,13 +38,13 @@ data class Repository(
     @SerializedName("watchers_count")
     val watchersCount: Int,
     @SerializedName("language")
-    val language: String,
+    val language: String?,
     @SerializedName("forks_count")
     val forksCount: Int,
     @SerializedName("visibility")
     val visibility: String,
     @SerializedName("licence")
-    val licence: Licence,
+    val licence: Licence?,
 )
 
 data class Licence(
