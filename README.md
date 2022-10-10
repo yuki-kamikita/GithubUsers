@@ -33,6 +33,7 @@ com.example.githubusers
 ## 優先度高
  - [ ] Material You
    - テーマアイコン
+     - 公式APIがまだないらしいので見送り
  - [x] Dark Theme
  - [ ] Animation
    - アイコンを [ヒーローアニメーション](https://youtu.be/Be9UH1kXFDw) でつなげる
@@ -53,10 +54,13 @@ com.example.githubusers
    - LightとDark
    - 彩度は統一で、マテリアルデザインの基準色から選べるようにする
 
-## やり残し
+## 機能やり残し
+ - 一覧無限スクロール
  - カードのelevationを調整してクリックできる感を出す
  - リスト一番上の余白調整
  - リストにbioを表示
  - APIリクエストが二回行われているのを修正
  - NavHostを別ファイルに分割
  - UserListの取得タイミングを変更
+ - 通信エラーでExceptionを出して再度取得するボタンを出す
+ - strings.xmlに文字列を移動
