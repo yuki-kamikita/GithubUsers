@@ -1,6 +1,8 @@
 package com.example.githubusers.ui.page
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -47,14 +50,13 @@ fun UserDetailUI(user: User) {
 @Composable
 fun UserProfile(user: User) {
     Surface(
-//        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.secondary,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-//        verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -80,36 +82,83 @@ fun UserProfile(user: User) {
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.End
             ) {
-
-                if (user.twitterUsername != null) Image(
-                    painter = painterResource(id = R.drawable.twitter_blue),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(start = 8.dp)
-                        .clickable(
-                            enabled = true,
-                            onClickLabel = "Twitter",
-                            onClick = {}
-                        )
-                )
-                if (user.email != null) Icon(
-                    imageVector = Icons.Default.Email,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(start = 8.dp)
-                        .clickable(
-                            enabled = true,
-                            onClickLabel = "EMail",
-                            onClick = {}
-                        )
-                )
-
+                if (user.twitterUsername != null) TwitterLinkIcon(user.twitterUsername)
+                if (user.email != null) EmailLinkIcon(user.email)
+                if (user.blog != null) BlogLinkIcon(user.blog)
             }
         }
     }
 }
+
+@Composable
+fun TwitterLinkIcon(twitterUsername: String) {
+    val context = LocalContext.current
+    Image(
+        painter = painterResource(id = R.drawable.twitter_blue),
+        contentDescription = null,
+        modifier = Modifier
+            .size(40.dp)
+            .padding(all = 8.dp)
+            .clickable(
+                enabled = true,
+                onClickLabel = "Twitter",
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://twitter.com/${twitterUsername}")
+                    )
+                    context.startActivity(intent)
+                }
+            )
+    )
+}
+
+@Composable
+fun EmailLinkIcon(email: String) {
+    val context = LocalContext.current
+    Icon(
+        imageVector = Icons.Default.Email,
+        contentDescription = null,
+        modifier = Modifier
+            .size(40.dp)
+            .padding(all = 8.dp)
+            .clickable(
+                enabled = true,
+                onClickLabel = "EMail",
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_SENDTO,
+                        Uri.parse("mailto:${email}")
+                    )
+                    context.startActivity(intent)
+                }
+            )
+    )
+}
+
+@Composable
+fun BlogLinkIcon(blog: String) {
+    val context = LocalContext.current
+    Icon(
+        imageVector = Icons.Default.Language,
+        contentDescription = null,
+        modifier = Modifier
+            .size(40.dp)
+            .padding(all = 8.dp)
+            .clickable(
+                enabled = true,
+                onClickLabel = "Url",
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(blog)
+                    )
+                    context.startActivity(intent)
+                }
+            )
+    )
+}
+
 
 @Composable
 fun UserRepository(user: User) {

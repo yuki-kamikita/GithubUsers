@@ -1,11 +1,10 @@
 package com.example.githubusers.model.remote
 
-import android.service.autofill.UserData
 import com.example.githubusers.core.Logger
 import com.example.githubusers.core.data.User
 import com.example.githubusers.core.data.Users
-import com.example.githubusers.core.dummy.userJsonString
-import com.example.githubusers.core.dummy.usersJsonString
+import com.example.githubusers.core.dummy.userJsonStringDummy
+import com.example.githubusers.core.dummy.usersJsonStringDummy
 import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,7 +26,7 @@ class ApiRequest {
         return if (response.isSuccessful) response.body() else null
     }
     fun getAllUsersDummy(): List<User> {
-        return Gson().fromJson<Users>(usersJsonString, Users::class.java).userList
+        return Gson().fromJson<Users>(usersJsonStringDummy, Users::class.java).userList
     }
 
     /**
@@ -39,6 +38,6 @@ class ApiRequest {
         return if (response.isSuccessful) response.body() else null
     }
     fun getUserDummy(): User {
-        return Gson().fromJson<User>(userJsonString, User::class.java)
+        return Gson().fromJson<User>(userJsonStringDummy, User::class.java)
     }
 }

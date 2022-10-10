@@ -31,22 +31,25 @@ com.example.githubusers
 
 # TODO
 ## 優先度高
- - Material You
- - Dark Theme
- - Animation
-   - アイコンを[ヒーローアニメーション](https://youtu.be/Be9UH1kXFDw)でつなげる
- - フォント
+ - [ ] Material You
+   - テーマアイコン
+ - [x] Dark Theme
+ - [ ] Animation
+   - アイコンを [ヒーローアニメーション](https://youtu.be/Be9UH1kXFDw) でつなげる
+ - [ ] フォント
 
 ## 優先度中
- - 検索
- - お気に入り
+ - [ ] 検索
+   - 一覧上部に検索バーを作り、値が空でなければ [検索API](https://docs.github.com/en/rest/search#search-users) に切り替える
+ - [ ] お気に入り
+   - NavigationBarもしくはFABで一覧とお気に入り済みのユーザーの切り替え
 
 ## 優先度低
- - Githubログイン
- - ソート
- - 多言語対応
+ - [ ] Githubログイン
+ - [ ] ソート
+ - [ ] 多言語対応
    - Google翻訳とかで自動生成する
- - 色切り替え
+ - [ ] 色切り替え
    - LightとDark
    - 彩度は統一で、マテリアルデザインの基準色から選べるようにする
 

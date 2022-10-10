@@ -3,11 +3,11 @@ package com.example.githubusers.core.dummy
 // GithubAPIが 60件/h の制限があったので、開発用にダミーのレスポンスを用意
 
 /**
- * ユーザーの一覧を取得する のレスポンス
+ * ユーザーの一覧を取得する のレスポンス例
  *
  * https://docs.github.com/en/rest/users/users#list-users
  */
-const val usersJsonString = """{users: [
+const val usersJsonStringDummy = """{users: [
     {
         "login": "yuki-kamikita",
         "id": 35297494,
@@ -211,11 +211,11 @@ const val usersJsonString = """{users: [
 ]}"""
 
 /**
- * ユーザーを取得する のレスポンス
+ * ユーザーを取得する のレスポンス例
  *
  * https://docs.github.com/en/rest/users/users#get-a-user
  */
-const val userJsonString = """{
+const val userJsonStringDummy = """{
     "login": "yuki-kamikita",
     "id": 35297494,
     "node_id": "MDQ6VXNlcjM1Mjk3NDk0",
@@ -238,7 +238,7 @@ const val userJsonString = """{
     "company": "Japan",
     "blog": "https://akaiyukiusagi.com",
     "location": null,
-    "email": null,
+    "email": "akaiyukiusagi@gmail.com",
     "hireable": null,
     "bio": "こんにちは",
     "twitter_username": "yuki_kamikita",
