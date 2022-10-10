@@ -2,6 +2,7 @@ package com.example.githubusers.core.dummy
 
 import com.example.githubusers.core.data.User
 
+// TODO: GithubApiResponseを使ったgetUserDummy()を使用する
 val sampleUser = User(
     login = "octocat",
     id = 1,

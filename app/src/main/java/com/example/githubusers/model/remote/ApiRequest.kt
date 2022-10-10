@@ -1,6 +1,7 @@
 package com.example.githubusers.model.remote
 
 import com.example.githubusers.core.Logger
+import com.example.githubusers.core.data.Repositories
 import com.example.githubusers.core.data.User
 import com.example.githubusers.core.data.Users
 import com.example.githubusers.core.dummy.userJsonStringDummy
@@ -21,8 +22,9 @@ class ApiRequest {
      * @return 取得失敗したらnullを返す TODO: ここのエラーの処理ちゃんとする
      */
     suspend fun getAllUsers(): List<User>? {
-        val response = service.allUsers()
+        val response = service.getAllUsers()
         Logger.debug("$response")
+        Logger.debug("${response.body()}")
         return if (response.isSuccessful) response.body() else null
     }
     fun getAllUsersDummy(): List<User> {
@@ -33,11 +35,28 @@ class ApiRequest {
      * @return 取得失敗したらnullを返す TODO: ここのエラーの処理ちゃんとする
      */
     suspend fun getUser(login: String): User? {
-        val response = service.user(login)
+        val response = service.getUser(login)
         Logger.debug("$response")
+        Logger.debug("${response.body()}")
         return if (response.isSuccessful) response.body() else null
     }
     fun getUserDummy(): User {
         return Gson().fromJson<User>(userJsonStringDummy, User::class.java)
+    }
+
+    /**
+     * 指定したユーザーの全レポジトリを取得する
+     *
+     * @return 取得失敗したらnullを返す TODO: ここのエラーの処理ちゃんとする
+     */
+    suspend fun getUserRepositories(userName: String): Repositories? {
+        val response = service.searchRepositories("user${':'}$userName")
+        Logger.debug("$response")
+        Logger.debug("${response.body()}")
+//        val repositories: Repositories? = response.body()
+//        Logger.debug("$repositories")
+//
+//        return if (response.isSuccessful) repositories else null
+        return if (response.isSuccessful) response.body() else null
     }
 }
