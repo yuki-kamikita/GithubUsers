@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class UserDetailViewModel(userName: String): ViewModel() {
     val user: MutableState<User> = mutableStateOf(User())
-    var repositories: MutableState<Repositories?> = mutableStateOf(null)
+    val repositories: MutableState<Repositories?> = mutableStateOf(null)
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
