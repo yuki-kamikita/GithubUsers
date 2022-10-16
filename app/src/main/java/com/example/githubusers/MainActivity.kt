@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.githubusers.core.Logger
 import com.example.githubusers.core.data.User
 import com.example.githubusers.model.remote.ApiRequest
 import com.example.githubusers.ui.destination.AllUser
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val userList = ApiRequest().getAllUsers()!!
+            val userList = ApiRequest().getAllUsers()!! // FIXME: アクセス制限になるとnullが入りクラッシュする
 //            val userList = ApiRequest().getAllUsersDummy() // 開発用のダミーデータ
 
             CoroutineScope(Dispatchers.Main).launch {
@@ -50,12 +51,7 @@ class MainActivity : ComponentActivity() {
                                 arguments = UserDetail.arguments
                             ) { user ->
                                 val login = user.arguments?.getString(UserDetail.loginArg)!!
-                                var userDetail by remember { mutableStateOf(User()) }
-                                LaunchedEffect(userDetail) {
-                                    userDetail = ApiRequest().getUser(login)!!
-//                                    userDetail = ApiRequest().getUserDummy()
-                                }
-                                UserDetailUI(userDetail)
+                                UserDetailUI(login)
                             }
                             composable(route = FavoriteUser.route) {}
                         }

@@ -13,12 +13,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UserDetailViewModel(user: User): ViewModel() {
+class UserDetailViewModel(userName: String): ViewModel() {
+    val user: MutableState<User> = mutableStateOf(User())
     var repositories: MutableState<Repositories?> = mutableStateOf(null)
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            repositories.value = ApiRequest().getUserRepositories(user.login)
+            user.value = ApiRequest().getUser(userName)!! // FIXME: アクセス制限になるとnullが入りクラッシュする
+            repositories.value = ApiRequest().getUserRepositories(user.value.login)
             Logger.debug("$repositories")
         }
     }

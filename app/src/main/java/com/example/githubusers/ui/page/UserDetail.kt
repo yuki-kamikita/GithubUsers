@@ -42,8 +42,9 @@ import com.google.gson.annotations.SerializedName
  * レポジトリをクリックしたらブラウザで該当レポジトリを表示
  */
 @Composable
-fun UserDetailUI(user: User, viewModel: UserDetailViewModel = UserDetailViewModel(user)) {
+fun UserDetailUI(userName: String, viewModel: UserDetailViewModel = UserDetailViewModel(userName)) {
     val repositories by viewModel.repositories
+    val user by viewModel.user
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
@@ -231,7 +232,7 @@ fun Preview() {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            UserDetailUI(sampleUser)
+            UserDetailUI(sampleUser.login)
         }
     }
 }
