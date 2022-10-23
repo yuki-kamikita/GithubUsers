@@ -7,6 +7,7 @@ import com.example.githubusers.core.data.Users
 import com.example.githubusers.core.dummy.userJsonStringDummy
 import com.example.githubusers.core.dummy.usersJsonStringDummy
 import com.google.gson.Gson
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -21,11 +22,11 @@ class ApiRequest {
     /**
      * @return 取得失敗したらnullを返す
      */
-    suspend fun getAllUsers(): List<User>? {
+    suspend fun getAllUsers(): Response<List<User>> {
         val response = service.getAllUsers()
         Logger.debug("$response")
         Logger.debug("${response.body()}")
-        return if (response.isSuccessful) response.body() else null
+        return response
     }
     fun getAllUsersDummy(): List<User> {
         return Gson().fromJson<Users>(usersJsonStringDummy, Users::class.java).userList

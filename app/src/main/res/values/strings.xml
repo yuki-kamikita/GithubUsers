@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GithubUsers</string>
+    <string name="network_error_message">通信に失敗しました\n時間を置いて再度接続してください</string>
 </resources>

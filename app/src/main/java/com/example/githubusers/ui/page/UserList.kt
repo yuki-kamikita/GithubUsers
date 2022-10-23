@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,9 +62,8 @@ fun UserCard(user: User, onClick: (String) -> Unit) {
                     .clip(CircleShape)
             )
             Column(modifier = Modifier.padding(start = 8.dp)) {
-
                 Text(text = user.login)
-
+//                if (user.bio != null) Text(text = user.bio)
             }
         }
 

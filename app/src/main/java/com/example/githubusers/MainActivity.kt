@@ -8,6 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.githubusers.ui.component.CenterProgressIndicator
+import com.example.githubusers.ui.component.NetworkErrorMessage
 import com.example.githubusers.ui.destination.AllUser
 import com.example.githubusers.ui.destination.FavoriteUser
 import com.example.githubusers.ui.destination.UserDetail
@@ -15,9 +17,10 @@ import com.example.githubusers.ui.page.UserDetailUI
 import com.example.githubusers.ui.page.UserListUI
 import com.example.githubusers.ui.theme.GithubUsersTheme
 import com.example.githubusers.viewModel.MainViewModel
+import com.example.githubusers.viewModel.UserListState
 
 class MainActivity(viewModel: MainViewModel = MainViewModel()) : ComponentActivity() {
-    private val userList by viewModel.userList
+    private val userListState by viewModel.userListState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +32,19 @@ class MainActivity(viewModel: MainViewModel = MainViewModel()) : ComponentActivi
                     startDestination = AllUser.route,
                 ) {
                     composable(route = AllUser.route) {
-                        UserListUI(
-                            userList,
-                            onCardClick = { login ->
-                                navController.navigateSingleTopTo("${UserDetail.route}/$login")
-                            },
-                        )
+                        when (userListState) {
+                            is UserListState.Success -> {
+                                UserListUI(
+                                    userListState.body(),
+                                    onCardClick = { login ->
+                                        navController.navigateSingleTopTo("${UserDetail.route}/$login")
+                                    },
+                                )
+                            }
+                            is UserListState.Failure -> NetworkErrorMessage()
+                            is UserListState.Loading -> CenterProgressIndicator()
+                        }
+
                     }
                     composable(
                         route = UserDetail.routeWithArgs,
