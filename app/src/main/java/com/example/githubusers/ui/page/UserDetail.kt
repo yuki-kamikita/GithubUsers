@@ -32,8 +32,13 @@ import com.example.githubusers.ui.theme.GithubUsersTheme
 import com.example.githubusers.R
 import com.example.githubusers.core.data.Licence
 import com.example.githubusers.core.data.Repository
+import com.example.githubusers.navigateSingleTopTo
 import com.example.githubusers.ui.component.CenterProgressIndicator
+import com.example.githubusers.ui.component.NetworkErrorMessage
+import com.example.githubusers.ui.destination.UserDetail
+import com.example.githubusers.viewModel.UserDetailState
 import com.example.githubusers.viewModel.UserDetailViewModel
+import com.example.githubusers.viewModel.UserListState
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -42,19 +47,27 @@ import com.google.gson.annotations.SerializedName
  * レポジトリをクリックしたらブラウザで該当レポジトリを表示
  */
 @Composable
-fun UserDetailUI(user: User, viewModel: UserDetailViewModel = UserDetailViewModel(user)) {
+fun UserDetailUI(userName: String, viewModel: UserDetailViewModel = UserDetailViewModel(userName)) {
     val repositories by viewModel.repositories
+    val user by viewModel.user
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
     ) {
-        LazyColumn{
-            item { UserProfile(user = user) }
-            if (repositories != null) items(repositories!!.items!!) { repository ->
-                RepositoryCard(repository = repository)
+        when (user) {
+            is UserDetailState.Success -> {
+                LazyColumn{
+                    item { UserProfile(user = user.body()) }
+                    if (repositories != null) items(repositories!!.items!!) { repository ->
+                        RepositoryCard(repository = repository)
+                    }
+                    else item { CenterProgressIndicator() }
+                }
             }
-            else item { CenterProgressIndicator() }
+            is UserDetailState.Failure -> NetworkErrorMessage()
+            is UserDetailState.Loading -> CenterProgressIndicator()
         }
+
     }
 }
 
@@ -231,7 +244,7 @@ fun Preview() {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            UserDetailUI(sampleUser)
+            UserDetailUI(sampleUser.login)
         }
     }
 }

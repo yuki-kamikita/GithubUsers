@@ -59,7 +59,6 @@ com.example.githubusers
  - カードのelevationを調整してクリックできる感を出す
  - リスト一番上の余白調整
  - リストにbioを表示
- - APIリクエストが二回行われているのを修正
  - NavHostを別ファイルに分割
  - UserListの取得タイミングを変更
  - 通信エラーでExceptionを出して再度取得するボタンを出す

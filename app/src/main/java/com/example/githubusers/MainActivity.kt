@@ -7,59 +7,53 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.githubusers.core.data.User
-import com.example.githubusers.model.remote.ApiRequest
+import com.example.githubusers.ui.component.CenterProgressIndicator
+import com.example.githubusers.ui.component.NetworkErrorMessage
 import com.example.githubusers.ui.destination.AllUser
 import com.example.githubusers.ui.destination.FavoriteUser
 import com.example.githubusers.ui.destination.UserDetail
 import com.example.githubusers.ui.page.UserDetailUI
 import com.example.githubusers.ui.page.UserListUI
 import com.example.githubusers.ui.theme.GithubUsersTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.githubusers.viewModel.MainViewModel
+import com.example.githubusers.viewModel.UserListState
 
-class MainActivity : ComponentActivity() {
+class MainActivity(viewModel: MainViewModel = MainViewModel()) : ComponentActivity() {
+    private val userListState by viewModel.userListState
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val userList = ApiRequest().getAllUsers()!!
-//            val userList = ApiRequest().getAllUsersDummy() // 開発用のダミーデータ
-
-            CoroutineScope(Dispatchers.Main).launch {
-                setContent {
-                    GithubUsersTheme {
-                        val navController = rememberNavController()
-                        NavHost(
-                            navController = navController,
-                            startDestination = AllUser.route,
-                        ) {
-                            composable(route = AllUser.route) {
+        setContent {
+            GithubUsersTheme {
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = AllUser.route,
+                ) {
+                    composable(route = AllUser.route) {
+                        when (userListState) {
+                            is UserListState.Success -> {
                                 UserListUI(
-                                    userList,
+                                    userListState.body(),
                                     onCardClick = { login ->
                                         navController.navigateSingleTopTo("${UserDetail.route}/$login")
                                     },
                                 )
                             }
-                            composable(
-                                route = UserDetail.routeWithArgs,
-                                arguments = UserDetail.arguments
-                            ) { user ->
-                                val login = user.arguments?.getString(UserDetail.loginArg)!!
-                                var userDetail by remember { mutableStateOf(User()) }
-                                LaunchedEffect(userDetail) {
-                                    userDetail = ApiRequest().getUser(login)!!
-//                                    userDetail = ApiRequest().getUserDummy()
-                                }
-                                UserDetailUI(userDetail)
-                            }
-                            composable(route = FavoriteUser.route) {}
+                            is UserListState.Failure -> NetworkErrorMessage()
+                            is UserListState.Loading -> CenterProgressIndicator()
                         }
+
                     }
+                    composable(
+                        route = UserDetail.routeWithArgs,
+                        arguments = UserDetail.arguments
+                    ) { user ->
+                        val login = user.arguments?.getString(UserDetail.loginArg)!!
+                        UserDetailUI(login)
+                    }
+                    composable(route = FavoriteUser.route) {}
                 }
             }
         }
