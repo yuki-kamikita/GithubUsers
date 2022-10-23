@@ -32,8 +32,13 @@ import com.example.githubusers.ui.theme.GithubUsersTheme
 import com.example.githubusers.R
 import com.example.githubusers.core.data.Licence
 import com.example.githubusers.core.data.Repository
+import com.example.githubusers.navigateSingleTopTo
 import com.example.githubusers.ui.component.CenterProgressIndicator
+import com.example.githubusers.ui.component.NetworkErrorMessage
+import com.example.githubusers.ui.destination.UserDetail
+import com.example.githubusers.viewModel.UserDetailState
 import com.example.githubusers.viewModel.UserDetailViewModel
+import com.example.githubusers.viewModel.UserListState
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -49,13 +54,20 @@ fun UserDetailUI(userName: String, viewModel: UserDetailViewModel = UserDetailVi
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface,
     ) {
-        LazyColumn{
-            item { UserProfile(user = user) }
-            if (repositories != null) items(repositories!!.items!!) { repository ->
-                RepositoryCard(repository = repository)
+        when (user) {
+            is UserDetailState.Success -> {
+                LazyColumn{
+                    item { UserProfile(user = user.body()) }
+                    if (repositories != null) items(repositories!!.items!!) { repository ->
+                        RepositoryCard(repository = repository)
+                    }
+                    else item { CenterProgressIndicator() }
+                }
             }
-            else item { CenterProgressIndicator() }
+            is UserDetailState.Failure -> NetworkErrorMessage()
+            is UserDetailState.Loading -> CenterProgressIndicator()
         }
+
     }
 }
 

@@ -19,9 +19,6 @@ class ApiRequest {
         .build()
     private val service = retrofit.create(Endpoint::class.java)
 
-    /**
-     * @return 取得失敗したらnullを返す
-     */
     suspend fun getAllUsers(): Response<List<User>> {
         val response = service.getAllUsers()
         Logger.debug("$response")
@@ -32,14 +29,11 @@ class ApiRequest {
         return Gson().fromJson<Users>(usersJsonStringDummy, Users::class.java).userList
     }
 
-    /**
-     * @return 取得失敗したらnullを返す
-     */
-    suspend fun getUser(login: String): User? {
+    suspend fun getUser(login: String): Response<User> {
         val response = service.getUser(login)
         Logger.debug("$response")
         Logger.debug("${response.body()}")
-        return if (response.isSuccessful) response.body() else null
+        return response
     }
     fun getUserDummy(): User {
         return Gson().fromJson<User>(userJsonStringDummy, User::class.java)
@@ -47,8 +41,6 @@ class ApiRequest {
 
     /**
      * 指定したユーザーの全レポジトリを取得する
-     *
-     * @return 取得失敗したらnullを返す
      */
     suspend fun getUserRepositories(userName: String): Repositories? {
         val response = service.searchRepositories("user${':'}$userName")
