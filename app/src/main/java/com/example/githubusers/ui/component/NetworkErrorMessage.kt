@@ -37,22 +37,15 @@ fun NetworkErrorMessage(e: String = "") {
 }
 
 @Preview(
-    showBackground = true,
     name = "Light Mode"
 )
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true,
     name = "Dark Mode"
 )
 @Composable
 fun Preview() {
     GithubUsersTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            NetworkErrorMessage()
-        }
+        NetworkErrorMessage()
     }
 }
